@@ -1,0 +1,32 @@
+	
+<div>
+<a class="btn btn-secondary" href="/course"><i class="fa fa-plus"></i> Create New</a> 
+ 
+<h3 align="center">Edureka's Course List  </h3>
+</div>
+<table class="table table-striped">
+<thead>
+<tr>
+<th>Course Name</th>
+<th>Course Id</th>
+<th>Course Duration(Hrs)</th>
+<th>Course Fee(USD)</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+{{#each list}}
+<h1>{{this.courseName}}</h1>
+<tr align="center">
+<td>{{courseName}}</td>
+<td>{{courseId}}</td>
+<td>{{courseDuration}}</td>
+<td>{{courseFee}}</td>
+<td>
+<a href="/course/{{_id}}">{{_id}}  </a>
+<a href="/course/delete/{{_id}}" onclick="return confirm('Are you sure to delete this record ?');"> Delete </a>
+</td>
+</tr>
+{{/each}}
+</tbody>
+</table>
