@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 mongoose.connect(
-  "mongodb://localhost:27017/myFirstDatabase",
-  { useNewUrlParser: true },
+  `${process.env.BASEURL_DATABASE}/uerLogin`,
+  { useNewUrlParser: true, useUnifiedTopology: true },
   (err) => {
     if (!err) {
       console.log("Successfully Established Connection with MongoDB");
@@ -14,3 +15,4 @@ mongoose.connect(
 );
 
 require("./course.model");
+require("./user.model");

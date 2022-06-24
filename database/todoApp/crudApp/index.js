@@ -76,15 +76,15 @@ app.get("/api/course", (req, res) => {
     Course.find((err, doc) => {
       if (!err) {
         let limit = req?.body?.limit ? req?.body?.limit : 10;
-        let page = req?.body?.page;
+        let page = req?.body?.page ? req?.body?.page : 1;
         let pageData;
         if (doc.length != 0) {
           pageData = handlePagination(page, limit, doc);
-          if (pageData.length) {
-            res.send(pageData);
-          } else {
-            res.send("your requirement does not fullfill for database");
-          }
+          // if (Object.keys(pageData).length) {
+          res.send(pageData);
+          // } else {
+          // res.send("your requirement does not fullfill for database");
+          // }
         } else {
           res.send("databse is empty");
         }
@@ -120,16 +120,42 @@ app.get("/api/course", (req, res) => {
 
 function handlePagination(page, limit, data) {
   let newPageData = [];
+
+  let totalPage = () => {
+    if (data.length) {
+      if (limit > data.length) {
+        return 1;
+      } else {
+        if (data.length % limit) {
+          return Math.floor(data.length / limit) + 1;
+        } else {
+          return Math.floor(data.length / limit);
+        }
+      }
+    } else {
+      return 0;
+    }
+  };
+
+  let totalResult = data.length;
   let minPage = (page - 1) * limit;
   let maxPage = data.length > page * limit ? page * limit : data.length;
+  let pageResponse = {
+    page: page,
+    limit: limit,
+    data: newPageData,
+    totalResults: totalResult,
+    totalPages: totalPage(),
+  };
   data.forEach((element, index) => {
     if (index >= minPage && index < maxPage) {
       newPageData.push(element);
     } else if (index > maxPage) {
-      return newPageData;
+      return pageResponse;
     }
   });
-  return newPageData;
+
+  return pageResponse;
 }
 
 // app.get("/api/songs", (req, res) => {
@@ -181,7 +207,7 @@ app.post("/api/course", (req, res) => {
 
 //update request
 app.put("/api/course/:id", (req, res) => {
-  if (!req.body._id) {
+  if (req.params.id || req.body._id) {
     updateIntoMongoDB(req, res);
   }
 
